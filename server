@@ -1,0 +1,13 @@
+while true; do
+  if ! pgrep -x "bedrock_server" > /dev/null
+  then
+    echo "Starting Minecraft Bedrock Server..."
+    cd ~/bedrockserver
+    box64 bedrock_server
+    echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."
+    sleep 5
+  else
+    echo "Server is running."
+    sleep 5
+  fi
+done
