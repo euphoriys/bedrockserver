@@ -9,3 +9,13 @@ When that finishes enter this command and wait until it finishes.
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/invinc1ble7/bedrockserver/main/setup.sh)
 ```
+Now the download is done and we can use our Minecraft Bedrock Server.
+> [!TIP]
+> You can start the server with `startb`
+>
+> You can automatically start the server with `autostarb` incase the server crashes.
+> 
+> You can gain access to the server files using `storageb`
+
+> [!WARNING]
+> Because the Minecraft Bedrock Dedicated Server wasn't made for the CPU architectures of phones, we need to emulate it. This can lead to slower performance and might cause some issues. We use [Box64](https://github.com/ptitSeb/box64) to translate the server from AMD64 to ARM64.
