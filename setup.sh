@@ -10,3 +10,4 @@ cd ~ && wget https://raw.githubusercontent.com/invinc1ble7/bedrockserver/main/st
 cd ~ && wget https://raw.githubusercontent.com/invinc1ble7/bedrockserver/main/autostartb && mv autostartb ../usr/bin/autostartb && chmod +x ../usr/bin/autostartb
 cd ~ && wget https://raw.githubusercontent.com/invinc1ble7/bedrockserver/main/storageb && mv storageb ../usr/bin/storageb && chmod +x ../usr/bin/storageb
 '
+echo "The files were downloaded successfully."
