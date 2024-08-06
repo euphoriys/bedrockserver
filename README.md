@@ -7,7 +7,7 @@
 After installing Termux, open it and wait until it downloads all packages until you can enter commands.
 When that finishes enter this command and wait until it finishes.
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/invinc1ble7/bedrockserver/main/setup.sh)
+bash <(curl -s https://raw.githubusercontent.com/euphoriys/bedrockserver/main/setup.sh)
 ```
 Now the download is done and we can use our Minecraft Bedrock Server.
 > [!TIP]
