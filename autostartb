@@ -1,3 +1,4 @@
+pd login ubuntu -- bash -c '
 while true; do
   if ! pgrep -x "bedrock_server" > /dev/null
   then
@@ -11,3 +12,4 @@ while true; do
     sleep 5
   fi
 done
+'
