@@ -18,4 +18,4 @@ Now the download is done and we can use our Minecraft Bedrock Server.
 > You can gain access to the server files using `storageb`
 
 > [!WARNING]
-> Because the Minecraft Bedrock Dedicated Server wasn't made for the CPU architectures of phones, we need to emulate it. This can lead to slower performance and might cause some issues. We use [Box64](https://github.com/ptitSeb/box64) to translate the server from AMD64 to ARM64.
+> Because the Minecraft Bedrock Dedicated Server wasn't made for the specific CPU architecture for phones, we need to translate it. This can lead to slower performance and might cause some issues. We use [Box64](https://github.com/ptitSeb/box64) to translate the server from AMD64 to ARM64.
