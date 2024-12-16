@@ -1,4 +1,7 @@
 # bedrockserver
+> [!IMPORTANT]
+> THIS DOESN'T CURRENTLY WORK!
+
 > [!NOTE]
 > Create a Minecraft Bedrock Server using Termux on Android
 
