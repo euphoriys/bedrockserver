@@ -12,7 +12,7 @@ Now the download is done and we can use our Minecraft Bedrock Server.
 > [!TIP]
 > You can start the server with `startb`
 >
-> You can automatically start the server with `autostarb` incase the server crashes.
+> You can automatically start the server with `autostartb` incase the server crashes.
 > 
 > You can gain access to the server files using `storageb`
 
