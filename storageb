@@ -1,1 +1,0 @@
-pd login ubuntu -- bash -c "cd ~/bedrockserver && exec bash"
