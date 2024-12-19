@@ -1,7 +1,7 @@
 ## Create a Minecraft Bedrock Server using Termux on Android
 
 > [!IMPORTANT]
-> To set up your Minecraft Bedrock Server, begin by downloading [Termux](https://f-droid.org/repo/com.termux_1000.apk). Once installed, launch Termux and allow it to complete the initial setup process. When ready, enter the following command and wait for it to complete. After that enter this command bellow to setup your environment
+> To set up your Minecraft Bedrock Server, begin by downloading [Termux](https://f-droid.org/repo/com.termux_1000.apk). Once installed, launch Termux and allow it to complete the initial setup process. When ready, enter the following command and wait for it to complete. After that, enter this command bellow to setup your environment
 
 
 ```bash
