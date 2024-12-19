@@ -1,5 +1,4 @@
-> [!NOTE]
-> Create a Minecraft Bedrock Server using Termux on Android
+## Create a Minecraft Bedrock Server using Termux on Android
 
 > [!IMPORTANT]
 > In order to create our Minecraft Bedrock Server we need to download [Termux](https://f-droid.org/repo/com.termux_1000.apk).
