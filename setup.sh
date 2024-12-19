@@ -1,26 +1,32 @@
 #!/bin/bash
 
+echo "Setting up Bedrock server environment..."
+
 # Step 1: Update packages and install necessary tools
-yes | pkg up
-pkg ins proot-distro -y
+yes | pkg up > /dev/null 2>&1
+pkg ins proot-distro -y > /dev/null 2>&1
 
 # Step 2: Install Ubuntu distro in proot and set up the environment
-pd i ubuntu
-pd sh ubuntu -- bash -i -c << 'EOF'
+pd i ubuntu > /dev/null 2>&1
+pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
   # Step 1: Update and upgrade Ubuntu
-  apt update && apt upgrade -y && apt install curl nano unzip gpg -y
+  apt update > /dev/null 2>&1 && apt upgrade -y > /dev/null 2>&1 && apt install curl nano unzip -y > /dev/null 2>&1
 
-  # Step 2: Create a directory for the server
-  mkdir bedrockserver
-  cd bedrockserver
+  # Step 2: Install Box64 for ARM compatibility
+  curl -L -o box64-android_arm64.deb https://github.com/Pi-Apps-Coders/box64-debs/raw/master/debian/box64-android_0.3.3%2B20241219T063104.600ae18-1_arm64.deb > /dev/null 2>&1
+  dpkg -i box64-android_arm64.deb > /dev/null 2>&1
+  rm box64-android_arm64.deb > /dev/null 2>&1
 
+  # Step 3: Prepare the version downloader
+  touch select_minecraft_version.sh && chmod +x select_minecraft_version.sh > /dev/null 2>&1
+  cat << 'INNER_EOF' > select_minecraft_version.sh
   # Function to fetch the latest release or preview version
   fetch_version() {
     local pattern=$1
     curl -s https://minecraft.wiki/w/Bedrock_Dedicated_Server | grep -oP "(?<=$pattern)[^\"]+" || { echo "Error: Unable to fetch version."; exit 1; }
   }
 
-  # Step 3: Ask the user for the desired Minecraft Bedrock server version or to use the latest release/preview
+  # Ask the user for the desired Minecraft Bedrock server version or to use the latest release/preview
   read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
 
   # Determine the version based on the user's choice
@@ -44,11 +50,15 @@ pd sh ubuntu -- bash -i -c << 'EOF'
       ;;
   esac
 
-  # Step 4: Echo the download URL and version
+  # Create a directory for the server
+  mkdir bedrockserver > /dev/null 2>&1
+  cd bedrockserver
+
+  # Echo the download version
   echo "Downloading version: $version"
 
-  # Step 5: Download the corresponding version of the Bedrock server
-  curl -A "Mozilla/5.0 (Linux)" -o bedrock-server.zip $url || { echo "Error: Unable to download the specified version."; exit 1; }
+  # Download the corresponding version of the Bedrock server
+  curl -A "Mozilla/5.0 (Linux)" -o bedrock-server.zip $url > /dev/null 2>&1 || { echo "Error: Unable to download the specified version."; exit 1; }
 
   # Check if the downloaded file is a valid zip file
   if ! unzip -tq bedrock-server.zip > /dev/null 2>&1; then
@@ -59,10 +69,14 @@ pd sh ubuntu -- bash -i -c << 'EOF'
 
   echo "Download and validation successful."
 
-  # Step 6: Unzip the downloaded file and remove the zip file
-  unzip bedrock-server.zip && rm bedrock-server.zip
+  # Unzip the downloaded file and remove the zip file
+  echo "Unzipping the downloaded file..."
+  unzip bedrock-server.zip > /dev/null 2>&1 && rm bedrock-server.zip
 
-  # Step 7: Install Box64 for ARM compatibility
-  curl -L -o box64-android_arm64.deb https://github.com/Pi-Apps-Coders/box64-debs/raw/master/debian/box64-android_0.3.3%2B20241219T063104.600ae18-1_arm64.deb
-  dpkg -i box64-android_arm64.deb
-EOF
+  echo "Unzipping completed."
+  
+INNER_EOF
+OUTER_EOF
+
+echo "Environment setup completed. Run 'pd sh ubuntu' to enter the Ubuntu environment."
+echo "You can install the Bedrock server by running './select_minecraft_version.sh'."
