@@ -2,13 +2,13 @@
 
 # Step 1: Update packages and install necessary tools
 yes | pkg up
-pkg ins proot-distro
+pkg ins proot-distro -y
 
 # Step 2: Install Ubuntu distro in proot and set up the environment
 pd i ubuntu
-pd sh ubuntu -c << 'EOF'
+pd sh ubuntu -- bash -c << 'EOF'
   # Step 1: Update and upgrade Ubuntu
-  apt update && apt upgrade -y && apt install curl nano unzip
+  apt update && apt upgrade -y && apt install curl nano unzip -y
 
   # Step 2: Create a directory for the server
   mkdir bedrockserver
