@@ -9,4 +9,5 @@ bash <(curl -s https://raw.githubusercontent.com/euphoriys/bedrockserver/main/se
 ```
 
 > [!WARNING]
-> Because the Minecraft Bedrock Dedicated Server wasn't made for the specific CPU architecture for phones, we need to translate it. This can lead to slower performance and might cause some issues. We use [Box64](https://github.com/ptitSeb/box64) to translate the server from AMD64 to ARM64.
+> The Minecraft Bedrock Dedicated Server is not natively designed for the ARM64 architecture found in most phones. To bridge this gap, we use [Box64](https://github.com/ptitSeb/box64) to translate the server from AMD64 to ARM64. Please note, this process may result in reduced performance and potential issues, with performance varying significantly depending on your device.
+
