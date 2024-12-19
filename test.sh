@@ -6,7 +6,7 @@ pkg ins proot-distro -y
 
 # Step 2: Install Ubuntu distro in proot and set up the environment
 pd i ubuntu
-pd sh ubuntu -- bash -c "<< 'EOF'
+pd sh ubuntu -- bash -c << 'EOF'
   # Step 1: Update and upgrade Ubuntu
   apt update && apt upgrade -y && apt install curl nano unzip -y
 
@@ -85,4 +85,4 @@ pd sh ubuntu -- bash -c "<< 'EOF'
   # Automatically accept prompts
   yes | sudo apt update
   yes | sudo apt install box64-generic-arm -y
-EOF"
+EOF
