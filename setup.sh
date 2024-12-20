@@ -10,7 +10,7 @@ pkg ins proot-distro -y > /dev/null 2>&1
 pd i ubuntu > /dev/null 2>&1
 pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
   # Step 1: Update and upgrade Ubuntu
-  apt update > /dev/null 2>&1 && apt upgrade -y > /dev/null 2>&1 && apt install curl nano unzip -y > /dev/null 2>&1
+  apt update > /dev/null 2>&1 && apt upgrade -y > /dev/null 2>&1 && apt install curl nano -y > /dev/null 2>&1
 
   # Step 2: Install Box64 for ARM compatibility
   curl -L -o box64-android_arm64.deb https://github.com/Pi-Apps-Coders/box64-debs/raw/master/debian/box64-android_0.3.3%2B20241219T063104.600ae18-1_arm64.deb > /dev/null 2>&1
