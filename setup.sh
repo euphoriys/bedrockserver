@@ -72,7 +72,8 @@ pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
   # Unzip the downloaded file and remove the zip file
   echo "Unzipping the downloaded file..."
   unzip bedrock-server.zip > /dev/null 2>&1 && rm bedrock-server.zip
-
+  cd ~/bedrock-server && echo "#!/bin/bash; box64 bedrock_server" > start.sh && chmod +x start.sh
+  cd ~/bedrock-server && echo '#!/bin/bash; while true; do if ! pgrep -x "bedrock_server" > /dev/null; then echo "Starting Minecraft Bedrock Server..."; cd ~/bedrockserver || exit; box64 bedrock_server; echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."; sleep 5; else echo "Server is running."; sleep 5; fi; done' > autostart.sh
   echo "Unzipping completed."
   
 INNER_EOF
