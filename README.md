@@ -9,9 +9,8 @@
 > ```bash
 > bash <(curl -s https://raw.githubusercontent.com/euphoriys/bedrockserver/main/setup.sh)
 > ```
-
-## Starting your Server
-You can start the server with **`./start.sh`** or start it with **`./autostart.sh`** in the **`bedrock-server`** directory.
+> ### Starting your server
+> You can start the server with **`./start.sh`** or start it with **`./autostart.sh`** in the **`bedrock-server`** directory.
 
 ## 💡 Important Notes
 ### ARM64 Compatibility
