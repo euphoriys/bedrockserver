@@ -1,6 +1,6 @@
 <div align="center">
   <h1 align="center">Bedrux</h2>
-  <h3>Create a Minecraft Bedrock Server using Termux on Android</h3>
+  <h3>Create a Minecraft Bedrock Dedicated Server using Termux on Android</h3>
 </div>
 
 ## ⚡Getting Started
