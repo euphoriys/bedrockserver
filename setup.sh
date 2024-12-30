@@ -8,13 +8,13 @@ pkg ins proot-distro -y > /dev/null 2>&1
 
 # Step 2: Install Ubuntu distro in proot and set up the environment
 pd i ubuntu > /dev/null 2>&1
-pd sh ubuntu -- << 'OUTER_EOF'
-    apt update && apt upgrade -y && apt install curl nano gpg -y > /dev/null 2>&1
+pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
+    apt update > /dev/null 2>&1 && apt upgrade -y > /dev/null 2>&1 && apt install curl nano gpg -y > /dev/null 2>&1
     
     case "$(uname -m)" in
         aarch64)
             echo "Installing Box64 for ARM64 architecture..."
-            curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/box64.sh
+            curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/box64.sh > /dev/null 2>&1
             bash box64.sh > /dev/null 2>&1
             ;;
         x86_64|amd64)
@@ -27,8 +27,8 @@ pd sh ubuntu -- << 'OUTER_EOF'
     esac
 
     # Step 3: Prepare the server version downloader
-    curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/minecraft_version.sh
-    chmod +x minecraft_version.sh
+    curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/minecraft_version.sh > /dev/null 2>&1
+    chmod +x minecraft_version.sh > /dev/null 2>&1
 OUTER_EOF
 
 echo "Environment setup completed. Run 'pd sh ubuntu' to enter the Ubuntu environment."
