@@ -37,7 +37,7 @@ download_and_validate() {
 
     if ! unzip -tq bedrock-server.zip > /dev/null 2>&1; then
         echo "Error: The specified version does not exist or the downloaded file is not a valid zip file."
-        rm bedrock-server.zip
+        rm -r bedrock-server
         exit 1
     fi
 
@@ -56,6 +56,7 @@ setup_server() {
     echo '#!/bin/bash; while true; do if ! pgrep -x "bedrock_server" > /dev/null; then echo "Starting Minecraft Bedrock Server..."; cd ~/bedrockserver || exit; box64 bedrock_server; echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."; sleep 5; else echo "Server is running."; sleep 5; fi; done' > autostart.sh
     chmod +x autostart.sh
     echo "Unzipping completed."
+    rm bedrock-server.zip
 }
 
 # Main script execution
