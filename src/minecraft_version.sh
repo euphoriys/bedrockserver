@@ -48,6 +48,7 @@ download_and_validate() {
 create_start_script() {
     if command -v box64 > /dev/null 2>&1; then
         echo "#!/bin/bash
+export BOX64_LOG=0
 box64 bedrock_server" > start.sh
     else
         echo "#!/bin/bash
@@ -64,6 +65,7 @@ while true; do
     if ! pgrep -x "bedrock_server" > /dev/null; then
         echo "Starting Minecraft Bedrock Server..."
         cd ~/bedrockserver || exit
+        export BOX64_LOG=0
         box64 bedrock_server
         echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."
         sleep 5
