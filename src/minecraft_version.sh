@@ -32,8 +32,6 @@ determine_url() {
 
 # Function to download and validate the Bedrock server
 download_and_validate() {
-    mkdir -p ~/bedrockserver
-    cd ~/bedrockserver
     echo "Downloading version: $version"
     curl -s -A "Mozilla/5.0 (Linux)" -o bedrock-server.zip $url || { echo "Error: Unable to download the specified version."; exit 1; }
 
@@ -46,18 +44,41 @@ download_and_validate() {
     echo "Download and validation successful."
 }
 
+# Function to create start script
+create_start_script() {
+    echo "#!/bin/bash
+box64 bedrock_server" > start.sh
+    chmod +x start.sh
+}
+
+# Function to create autostart script
+create_autostart_script() {
+    echo '#!/bin/bash
+while true; do
+    if ! pgrep -x "bedrock_server" > /dev/null; then
+        echo "Starting Minecraft Bedrock Server..."
+        cd ~/bedrockserver || exit
+        box64 bedrock_server
+        echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."
+        sleep 5
+    else
+        echo "Server is running."
+        sleep 5
+    fi
+done' > autostart.sh
+    chmod +x autostart.sh
+}
+
 # Function to set up the server
 setup_server() {
-    cd ~/bedrockserver
     echo "Unzipping the downloaded file..."
-    unzip -q bedrock-server.zip && rm bedrock-server.zip
+    mkdir -p bedrockserver
+    cd bedrockserver
+    unzip -q ../bedrock-server.zip && rm ../bedrock-server.zip
     cd ~/bedrockserver
-    echo "#!/bin/bash; box64 bedrock_server" > start.sh
-    chmod +x start.sh
-    echo '#!/bin/bash; while true; do if ! pgrep -x "bedrock_server" > /dev/null; then echo "Starting Minecraft Bedrock Server..."; cd ~/bedrockserver || exit; box64 bedrock_server; echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."; sleep 5; else echo "Server is running."; sleep 5; fi; done' > autostart.sh
-    chmod +x autostart.sh
+    create_start_script
+    create_autostart_script
     echo "Unzipping completed."
-    rm bedrock-server.zip
 }
 
 # Main script execution
