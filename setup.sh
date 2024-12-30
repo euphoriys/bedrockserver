@@ -3,19 +3,19 @@
 echo "Setting up Bedrock server environment..."
 
 # Step 1: Update packages and install necessary tools
-yes | pkg up /dev/null 2>&1
-pkg ins proot-distro -y /dev/null 2>&1
+yes | pkg up > /dev/null 2>&1
+pkg ins proot-distro -y > /dev/null 2>&1
 
 # Step 2: Install Ubuntu distro in proot and set up the environment
-pd i ubuntu /dev/null 2>&1
+pd i ubuntu > /dev/null 2>&1
 pd sh ubuntu -- << 'OUTER_EOF'
-    apt update && apt upgrade -y && apt install curl nano gpg -y /dev/null 2>&1
+    apt update && apt upgrade -y && apt install curl nano gpg -y > /dev/null 2>&1
     
     case "$(uname -m)" in
         aarch64)
             echo "Installing Box64 for ARM64 architecture..."
             curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/box64.sh
-            bash box64.sh /dev/null 2>&1
+            bash box64.sh > /dev/null 2>&1
             ;;
         x86_64|amd64)
             echo "Skipping Box64 installation. CPU architecture is x86_64 or amd64."
