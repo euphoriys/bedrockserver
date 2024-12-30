@@ -16,6 +16,7 @@ pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
             echo "Installing Box64 for ARM64 architecture..."
             curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/box64.sh > /dev/null 2>&1
             bash box64.sh > /dev/null 2>&1
+            rm -rf box64.sh
             ;;
         x86_64|amd64)
             echo "Skipping Box64 installation. CPU architecture is x86_64 or amd64."
