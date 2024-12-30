@@ -32,12 +32,14 @@ determine_url() {
 
 # Function to download and validate the Bedrock server
 download_and_validate() {
+    mkdir -p ~/bedrockserver
+    cd ~/bedrockserver
     echo "Downloading version: $version"
     curl -s -A "Mozilla/5.0 (Linux)" -o bedrock-server.zip $url || { echo "Error: Unable to download the specified version."; exit 1; }
 
     if ! unzip -tq bedrock-server.zip > /dev/null 2>&1; then
         echo "Error: The specified version does not exist or the downloaded file is not a valid zip file."
-        rm -r bedrock-server
+        rm bedrock-server.zip
         exit 1
     fi
 
@@ -46,11 +48,10 @@ download_and_validate() {
 
 # Function to set up the server
 setup_server() {
+    cd ~/bedrockserver
     echo "Unzipping the downloaded file..."
-    mkdir -p bedrockserver
-    cd bedrockserver
     unzip -q bedrock-server.zip && rm bedrock-server.zip
-    cd ~/bedrock-server
+    cd ~/bedrockserver
     echo "#!/bin/bash; box64 bedrock_server" > start.sh
     chmod +x start.sh
     echo '#!/bin/bash; while true; do if ! pgrep -x "bedrock_server" > /dev/null; then echo "Starting Minecraft Bedrock Server..."; cd ~/bedrockserver || exit; box64 bedrock_server; echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."; sleep 5; else echo "Server is running."; sleep 5; fi; done' > autostart.sh
