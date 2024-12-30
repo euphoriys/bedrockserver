@@ -9,10 +9,8 @@ pkg ins proot-distro -y
 # Step 2: Install Ubuntu distro in proot and set up the environment
 pd i ubuntu
 pd sh ubuntu -- << 'OUTER_EOF'
-    # Step 1: Update and upgrade Ubuntu
     apt update && apt upgrade -y && apt install curl nano gpg -y
-
-    # Step 2: Check CPU architecture and install Box64 for ARM64 compatibility if applicable
+    
     case "$(uname -m)" in
         aarch64)
             echo "Installing Box64 for ARM64 architecture..."
