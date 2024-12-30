@@ -49,7 +49,7 @@ create_start_script() {
     if command -v box64 > /dev/null 2>&1; then
         echo "#!/bin/bash
 export BOX64_LOG=0
-box64 bedrock_server" > start.sh
+box64 bedrock_server | grep -v 'Box64 with Dynarec'" > start.sh
     else
         echo "#!/bin/bash
 ./bedrock_server" > start.sh
@@ -66,7 +66,7 @@ while true; do
         echo "Starting Minecraft Bedrock Server..."
         cd ~/bedrockserver || exit
         export BOX64_LOG=0
-        box64 bedrock_server
+        box64 bedrock_server | grep -v 'Box64 with Dynarec'
         echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."
         sleep 5
     else
