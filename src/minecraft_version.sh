@@ -47,6 +47,8 @@ download_and_validate() {
 # Function to set up the server
 setup_server() {
     echo "Unzipping the downloaded file..."
+    mkdir -p bedrockserver
+    cd bedrockserver
     unzip -q bedrock-server.zip && rm bedrock-server.zip
     cd ~/bedrock-server
     echo "#!/bin/bash; box64 bedrock_server" > start.sh
@@ -59,9 +61,6 @@ setup_server() {
 # Main script execution
 read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
 determine_url "$choice"
-
-mkdir -p bedrockserver
-cd bedrockserver
 
 download_and_validate
 setup_server
