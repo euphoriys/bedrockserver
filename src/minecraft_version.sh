@@ -33,7 +33,7 @@ determine_url() {
 # Function to download and validate the Bedrock server
 download_and_validate() {
     echo "Downloading version: $version"
-    curl -A "Mozilla/5.0 (Linux)" -o bedrock-server.zip $url || { echo "Error: Unable to download the specified version."; exit 1; }
+    curl -s -A "Mozilla/5.0 (Linux)" -o bedrock-server.zip $url || { echo "Error: Unable to download the specified version."; exit 1; }
 
     if ! unzip -tq bedrock-server.zip > /dev/null 2>&1; then
         echo "Error: The specified version does not exist or the downloaded file is not a valid zip file."
