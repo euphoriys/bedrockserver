@@ -79,6 +79,7 @@ setup_server() {
     create_start_script
     create_autostart_script
     echo "Unzipping completed."
+    echo "Setup completed. To start the server, navigate to the 'bedrockserver' directory and run './start.sh'."
 }
 
 # Main script execution
