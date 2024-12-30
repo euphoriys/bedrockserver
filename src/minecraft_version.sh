@@ -46,14 +46,20 @@ download_and_validate() {
 
 # Function to create start script
 create_start_script() {
-    echo "#!/bin/bash
+    if command -v box64 > /dev/null 2>&1; then
+        echo "#!/bin/bash
 box64 bedrock_server" > start.sh
+    else
+        echo "#!/bin/bash
+./bedrock_server" > start.sh
+    fi
     chmod +x start.sh
 }
 
 # Function to create autostart script
 create_autostart_script() {
-    echo '#!/bin/bash
+    if command -v box64 > /dev/null 2>&1; then
+        echo '#!/bin/bash
 while true; do
     if ! pgrep -x "bedrock_server" > /dev/null; then
         echo "Starting Minecraft Bedrock Server..."
@@ -66,6 +72,21 @@ while true; do
         sleep 5
     fi
 done' > autostart.sh
+    else
+        echo '#!/bin/bash
+while true; do
+    if ! pgrep -x "bedrock_server" > /dev/null; then
+        echo "Starting Minecraft Bedrock Server..."
+        cd ~/bedrockserver || exit
+        ./bedrock_server
+        echo "Minecraft Bedrock Server stopped! Restarting in 5 seconds."
+        sleep 5
+    else
+        echo "Server is running."
+        sleep 5
+    fi
+done' > autostart.sh
+    fi
     chmod +x autostart.sh
 }
 
