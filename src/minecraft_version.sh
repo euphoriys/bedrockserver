@@ -105,9 +105,72 @@ setup_server() {
     echo "Setup completed. To start the server, navigate to the 'bedrockserver' directory and run './start.sh'."
 }
 
+# Function to list existing instances
+list_instances() {
+    echo "Existing instances:"
+    ls -d bedrockserver_* 2>/dev/null || echo "No instances found."
+}
+
+# Function to replace an existing instance
+replace_instance() {
+    list_instances
+    read -p "Enter the instance number to replace: " instance_number
+    instance_dir="bedrockserver_$instance_number"
+    if [ -d "$instance_dir" ]; then
+        rm -rf "$instance_dir"
+        mv bedrockserver "$instance_dir"
+        echo "Instance $instance_number replaced successfully."
+    else
+        echo "Instance $instance_number does not exist."
+    fi
+}
+
+# Function to create a new instance
+create_new_instance() {
+    read -p "Enter a name for the new instance (leave empty for default naming): " instance_name
+    if [ -z "$instance_name" ]; then
+        instance_count=$(ls -d bedrockserver_* 2>/dev/null | wc -l)
+        if [ "$instance_count" -eq 0 ]; then
+            instance_name="bedrockserver"
+        else
+            instance_number=$((instance_count + 1))
+            instance_name="bedrockserver_$instance_number"
+        fi
+    fi
+    mkdir -p "$instance_name"
+    cd "$instance_name" || { echo "Failed to change directory to $instance_name"; exit 1; }
+    unzip -q ../bedrock-server.zip && rm ../bedrock-server.zip
+    create_start_script
+    create_autostart_script
+    cd ..
+    echo "New instance created: $instance_name"
+}
+
 # Main script execution
 read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
 determine_url "$choice"
 
 download_and_validate
-setup_server
+
+echo "Choose an option:"
+echo "1. Create a new instance"
+echo "2. Replace an existing instance"
+echo "3. Overwrite the current instance"
+read -p "Enter your choice [1-3]: " option
+
+case "$option" in
+    1)
+        setup_server
+        create_new_instance
+        ;;
+    2)
+        setup_server
+        replace_instance
+        ;;
+    3)
+        setup_server
+        ;;
+    *)
+        echo "Invalid option."
+        ;;
+esac
