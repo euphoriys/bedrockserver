@@ -32,13 +32,13 @@ determine_url() {
 
 # Function to download and validate the Bedrock server
 download_and_validate() {
-    local instance_name=$1
+    local temp_zip="bedrockserver_tmp.zip"
     echo "Downloading version: $version"
-    curl -s -A "Mozilla/5.0 (Linux)" -o "$instance_name.zip" $url || { echo "Error: Unable to download the specified version."; exit 1; }
+    curl -s -A "Mozilla/5.0 (Linux)" -o "$temp_zip" $url || { echo "Error: Unable to download the specified version."; exit 1; }
 
-    if ! unzip -tq "$instance_name.zip" > /dev/null 2>&1; then
+    if ! unzip -tq "$temp_zip" > /dev/null 2>&1; then
         echo "Error: The specified version does not exist or the downloaded file is not a valid zip file."
-        rm "$instance_name.zip"
+        rm "$temp_zip"
         exit 1
     fi
 
@@ -99,7 +99,7 @@ setup_server() {
     echo "Unzipping the downloaded file..."
     mkdir -p "$instance_name"
     cd "$instance_name"
-    unzip -q "../$instance_name.zip" && rm "../$instance_name.zip"
+    unzip -q "../bedrockserver_tmp.zip" && rm "../bedrockserver_tmp.zip"
     create_start_script
     create_autostart_script
     echo "Unzipping completed."
@@ -115,7 +115,7 @@ list_instances() {
     fi
     echo "Existing instances:"
     for i in "${!instances[@]}"; do
-        echo "[$((i+1))] ${instances[$i]}"
+        echo "[$((i+1))] ${instances[$i]#./}"
     done
     return 0
 }
@@ -133,11 +133,11 @@ replace_version() {
         instance_dir=$instance_selection
     fi
     if [ -d "$instance_dir" ]; then
-        unzip -o -j "$instance_name.zip" "bedrock_server" -d "$instance_dir"
-        rm "$instance_name.zip"
-        echo "Instance $instance_dir updated successfully."
+        unzip -o -j "bedrockserver_tmp.zip" "bedrock_server" -d "$instance_dir"
+        rm "bedrockserver_tmp.zip"
+        echo "Instance ${instance_dir#./} updated successfully."
     else
-        echo "Instance $instance_dir does not exist."
+        echo "Instance ${instance_dir#./} does not exist."
     fi
 }
 
@@ -156,9 +156,9 @@ overwrite_instance() {
     if [ -d "$instance_dir" ]; then
         rm -rf "$instance_dir"
         setup_server "$instance_dir"
-        echo "Instance $instance_dir overwritten successfully."
+        echo "Instance ${instance_dir#./} overwritten successfully."
     else
-        echo "Instance $instance_dir does not exist."
+        echo "Instance ${instance_dir#./} does not exist."
     fi
 }
 
@@ -196,12 +196,12 @@ else
         instance_dir=$instance_selection
     fi
     if [ ! -d "$instance_dir" ]; then
-        echo "Instance $instance_dir does not exist."
+        echo "Instance ${instance_dir#./} does not exist."
         exit 1
     fi
     read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
     determine_url "$choice"
-    download_and_validate "$instance_dir"
+    download_and_validate
     if [ "$option" -eq 2 ]; then
         replace_version "$instance_dir"
     elif [ "$option" -eq 3 ]; then
