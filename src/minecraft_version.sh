@@ -122,63 +122,62 @@ list_instances() {
 
 # Function to replace the bedrock_server executable in an existing instance
 replace_version() {
-    if ! list_instances; then
-        exit 1
-    fi
-    read -p "Enter the instance name to replace the server version: " instance_dir
+    local instance_dir=$1
     if [ -d "$instance_dir" ]; then
         unzip -o -j "bedrockserver_tmp.zip" "bedrock_server" -d "$instance_dir" > /dev/null
         rm "bedrockserver_tmp.zip"
         echo "Instance ${instance_dir#./} updated successfully."
     else
         echo "Instance ${instance_dir#./} does not exist."
+        exit 1
     fi
 }
 
 # Function to overwrite an existing instance
 overwrite_instance() {
-    if ! list_instances; then
-        exit 1
-    fi
-    read -p "Enter the instance name to overwrite: " instance_dir
+    local instance_dir=$1
     if [ -d "$instance_dir" ]; then
         rm -rf "$instance_dir"
         setup_server "$instance_dir"
         echo "Instance ${instance_dir#./} overwritten successfully."
     else
         echo "Instance ${instance_dir#./} does not exist."
+        exit 1
     fi
 }
 
-# Main script execution
 echo "Choose an option:"
 echo "1. Create a new instance"
 echo "2. Replace the server version in an existing instance"
 echo "3. Overwrite an existing instance"
 read -p "Enter your choice [1-3]: " option
 
+if [[ "$option" -ne 1 && "$option" -ne 2 && "$option" -ne 3 ]]; then
+    echo "Invalid option."
+    exit 1
+fi
+
 if [ "$option" -eq 1 ]; then
     read -p "Enter a name for the new instance (leave empty for default naming): " instance_name
     if [ -z "$instance_name" ]; then
-        instance_count=$(ls -d bedrockserver_* 2>/dev/null | wc -l)
-        if [ "$instance_count" -eq 0 ]; then
-            instance_name="bedrockserver"
-        else
-            instance_number=$((instance_count + 1))
-            instance_name="bedrockserver_$instance_number"
-        fi
+        instance_name="bedrockserver"
+        instance_number=2
+        while [ -d "$instance_name" ]; do
+            instance_name="bedrockserver$instance_number"
+            instance_number=$((instance_number + 1))
+        done
     fi
     read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
     determine_url "$choice"
-    download_and_validate "$instance_name"
+    download_and_validate
     setup_server "$instance_name"
 else
     if ! list_instances; then
         exit 1
     fi
     read -p "Enter the instance name: " instance_dir
-    if [ ! -d "$instance_dir" ]; then
-        echo "Instance ${instance_dir#./} does not exist."
+    if [ ! -d "$instance_dir" ] || [ ! -f "$instance_dir/bedrock_server" ]; then
+        echo "Instance $instance_dir does not exist."
         exit 1
     fi
     read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
@@ -190,5 +189,6 @@ else
         overwrite_instance "$instance_dir"
     else
         echo "Invalid option."
+        exit 1
     fi
 fi
