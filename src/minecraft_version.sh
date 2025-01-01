@@ -133,7 +133,7 @@ replace_version() {
         instance_dir=$instance_selection
     fi
     if [ -d "$instance_dir" ]; then
-        unzip -o -j "bedrockserver_tmp.zip" "bedrock_server" -d "$instance_dir"
+        unzip -o -j "bedrockserver_tmp.zip" "bedrock_server" -d "$instance_dir" > /dev/null
         rm "bedrockserver_tmp.zip"
         echo "Instance ${instance_dir#./} updated successfully."
     else
