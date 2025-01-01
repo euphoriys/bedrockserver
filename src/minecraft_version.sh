@@ -108,58 +108,95 @@ setup_server() {
 
 # Function to list existing instances
 list_instances() {
+    local instances=($(ls -d bedrockserver_* 2>/dev/null))
+    if [ ${#instances[@]} -eq 0 ]; then
+        echo "No instances found."
+        return 1
+    fi
     echo "Existing instances:"
-    ls -d bedrockserver_* 2>/dev/null || echo "No instances found."
+    for i in "${!instances[@]}"; do
+        echo "[$((i+1))] ${instances[$i]}"
+    done
+    return 0
 }
 
 # Function to replace the bedrock_server executable in an existing instance
 replace_version() {
-    list_instances
-    read -p "Enter the instance number to replace the bedrock_server executable: " instance_number
-    instance_dir="bedrockserver_$instance_number"
-    if [ -d "$instance_dir" ]; then
-        unzip -o -j "../$instance_name.zip" "bedrock_server" -d "$instance_dir"
-        rm "../$instance_name.zip"
-        echo "Instance $instance_number updated successfully."
+    if ! list_instances; then
+        exit 1
+    fi
+    read -p "Enter the instance number or name to replace the server version: " instance_selection
+    if [[ "$instance_selection" =~ ^[0-9]+$ ]]; then
+        instance_number=$((instance_selection - 1))
+        instance_dir=${instances[$instance_number]}
     else
-        echo "Instance $instance_number does not exist."
+        instance_dir=$instance_selection
+    fi
+    if [ -d "$instance_dir" ]; then
+        unzip -o -j "$instance_name.zip" "bedrock_server" -d "$instance_dir"
+        rm "$instance_name.zip"
+        echo "Instance $instance_dir updated successfully."
+    else
+        echo "Instance $instance_dir does not exist."
+    fi
+}
+
+# Function to overwrite an existing instance
+overwrite_instance() {
+    if ! list_instances; then
+        exit 1
+    fi
+    read -p "Enter the instance number or name to overwrite: " instance_selection
+    if [[ "$instance_selection" =~ ^[0-9]+$ ]]; then
+        instance_number=$((instance_selection - 1))
+        instance_dir=${instances[$instance_number]}
+    else
+        instance_dir=$instance_selection
+    fi
+    if [ -d "$instance_dir" ]; then
+        rm -rf "$instance_dir"
+        setup_server "$instance_dir"
+        echo "Instance $instance_dir overwritten successfully."
+    else
+        echo "Instance $instance_dir does not exist."
     fi
 }
 
 # Main script execution
 echo "Choose an option:"
 echo "1. Create a new instance"
-echo "2. Replace the bedrock_server executable in an existing instance"
-echo "3. Overwrite the current instance"
+echo "2. Replace the server version in an existing instance"
+echo "3. Overwrite an existing instance"
 read -p "Enter your choice [1-3]: " option
 
 read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
 determine_url "$choice"
 
-read -p "Enter a name for the new instance (leave empty for default naming): " instance_name
-if [ -z "$instance_name" ]; then
-    instance_count=$(ls -d bedrockserver_* 2>/dev/null | wc -l)
-    if [ "$instance_count" -eq 0 ]; then
-        instance_name="bedrockserver"
-    else
-        instance_number=$((instance_count + 1))
-        instance_name="bedrockserver_$instance_number"
+if [ "$option" -eq 1 ]; then
+    read -p "Enter a name for the new instance (leave empty for default naming): " instance_name
+    if [ -z "$instance_name" ]; then
+        instance_count=$(ls -d bedrockserver_* 2>/dev/null | wc -l)
+        if [ "$instance_count" -eq 0 ]; then
+            instance_name="bedrockserver"
+        else
+            instance_number=$((instance_count + 1))
+            instance_name="bedrockserver_$instance_number"
+        fi
     fi
+    download_and_validate "$instance_name"
+    setup_server "$instance_name"
+else
+    instance_name="bedrockserver_temp"
+    download_and_validate "$instance_name"
+    case "$option" in
+        2)
+            replace_version "$instance_name"
+            ;;
+        3)
+            overwrite_instance "$instance_name"
+            ;;
+        *)
+            echo "Invalid option."
+            ;;
+    esac
 fi
-
-download_and_validate "$instance_name"
-
-case "$option" in
-    1)
-        setup_server "$instance_name"
-        ;;
-    2)
-        replace_version "$instance_name"
-        ;;
-    3)
-        setup_server "bedrockserver"
-        ;;
-    *)
-        echo "Invalid option."
-        ;;
-esac
