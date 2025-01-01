@@ -36,7 +36,8 @@ You can start the server with **`./start.sh`** or start it with **`./autostart.s
 ### ARM64 Compatibility
 The Minecraft Bedrock Dedicated Server is not originally designed for ARM64 architecture, which is common in most Android phones. To make this work, we utilize [Box64](https://github.com/ptitSeb/box64) to translate the server from AMD64 to ARM64.
 
-> **WARNING:** Although this translation works, be aware that the performance may be reduced, and some issues may arise. The server’s performance will vary heavily depending on your device’s specifications.
+> [!WARNING]
+> Although this translation works, be aware that the performance may be reduced, and some issues may arise. The server’s performance will vary heavily depending on your device’s specifications.
 
 ---
 
