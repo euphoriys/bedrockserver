@@ -108,7 +108,7 @@ setup_server() {
 
 # Function to list existing instances
 list_instances() {
-    local instances=($(ls -d bedrockserver_* 2>/dev/null))
+    local instances=($(find . -type f -name "bedrock_server" -exec dirname {} \; | sort -u))
     if [ ${#instances[@]} -eq 0 ]; then
         echo "No instances found."
         return 1
@@ -169,9 +169,6 @@ echo "2. Replace the server version in an existing instance"
 echo "3. Overwrite an existing instance"
 read -p "Enter your choice [1-3]: " option
 
-read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
-determine_url "$choice"
-
 if [ "$option" -eq 1 ]; then
     read -p "Enter a name for the new instance (leave empty for default naming): " instance_name
     if [ -z "$instance_name" ]; then
@@ -183,20 +180,33 @@ if [ "$option" -eq 1 ]; then
             instance_name="bedrockserver_$instance_number"
         fi
     fi
+    read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
+    determine_url "$choice"
     download_and_validate "$instance_name"
     setup_server "$instance_name"
 else
-    instance_name="bedrockserver_temp"
-    download_and_validate "$instance_name"
-    case "$option" in
-        2)
-            replace_version "$instance_name"
-            ;;
-        3)
-            overwrite_instance "$instance_name"
-            ;;
-        *)
-            echo "Invalid option."
-            ;;
-    esac
+    if ! list_instances; then
+        exit 1
+    fi
+    read -p "Enter the instance number or name: " instance_selection
+    if [[ "$instance_selection" =~ ^[0-9]+$ ]]; then
+        instance_number=$((instance_selection - 1))
+        instance_dir=${instances[$instance_number]}
+    else
+        instance_dir=$instance_selection
+    fi
+    if [ ! -d "$instance_dir" ]; then
+        echo "Instance $instance_dir does not exist."
+        exit 1
+    fi
+    read -p "Do you want to use the latest release, preview, or enter a version manually? [release] " choice
+    determine_url "$choice"
+    download_and_validate "$instance_dir"
+    if [ "$option" -eq 2 ]; then
+        replace_version "$instance_dir"
+    elif [ "$option" -eq 3 ]; then
+        overwrite_instance "$instance_dir"
+    else
+        echo "Invalid option."
+    fi
 fi
