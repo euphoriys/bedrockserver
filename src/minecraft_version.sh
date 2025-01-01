@@ -114,8 +114,8 @@ list_instances() {
         return 1
     fi
     echo "Existing instances:"
-    for i in "${!instances[@]}"; do
-        echo "[$((i+1))] ${instances[$i]#./}"
+    for instance in "${instances[@]}"; do
+        echo "${instance#./}"
     done
     return 0
 }
@@ -125,13 +125,7 @@ replace_version() {
     if ! list_instances; then
         exit 1
     fi
-    read -p "Enter the instance number or name to replace the server version: " instance_selection
-    if [[ "$instance_selection" =~ ^[0-9]+$ ]]; then
-        instance_number=$((instance_selection - 1))
-        instance_dir=${instances[$instance_number]}
-    else
-        instance_dir=$instance_selection
-    fi
+    read -p "Enter the instance name to replace the server version: " instance_dir
     if [ -d "$instance_dir" ]; then
         unzip -o -j "bedrockserver_tmp.zip" "bedrock_server" -d "$instance_dir" > /dev/null
         rm "bedrockserver_tmp.zip"
@@ -146,13 +140,7 @@ overwrite_instance() {
     if ! list_instances; then
         exit 1
     fi
-    read -p "Enter the instance number or name to overwrite: " instance_selection
-    if [[ "$instance_selection" =~ ^[0-9]+$ ]]; then
-        instance_number=$((instance_selection - 1))
-        instance_dir=${instances[$instance_number]}
-    else
-        instance_dir=$instance_selection
-    fi
+    read -p "Enter the instance name to overwrite: " instance_dir
     if [ -d "$instance_dir" ]; then
         rm -rf "$instance_dir"
         setup_server "$instance_dir"
@@ -188,13 +176,7 @@ else
     if ! list_instances; then
         exit 1
     fi
-    read -p "Enter the instance number or name: " instance_selection
-    if [[ "$instance_selection" =~ ^[0-9]+$ ]]; then
-        instance_number=$((instance_selection - 1))
-        instance_dir=${instances[$instance_number]}
-    else
-        instance_dir=$instance_selection
-    fi
+    read -p "Enter the instance name: " instance_dir
     if [ ! -d "$instance_dir" ]; then
         echo "Instance ${instance_dir#./} does not exist."
         exit 1
