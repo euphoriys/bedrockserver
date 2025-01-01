@@ -14,7 +14,7 @@ pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
     case "$(uname -m)" in
         aarch64)
             echo "Installing Box64 for ARM64 architecture..."
-            curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/box64.sh > /dev/null 2>&1
+            curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/beta/src/box64.sh > /dev/null 2>&1
             bash box64.sh > /dev/null 2>&1
             rm -rf box64.sh
             ;;
@@ -28,7 +28,7 @@ pd sh ubuntu -- << 'OUTER_EOF' 2>/dev/null
     esac
 
     # Step 3: Prepare the server version downloader
-    curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/main/src/minecraft_version.sh > /dev/null 2>&1
+    curl -s -O https://raw.githubusercontent.com/euphoriys/bedrux/beta/src/minecraft_version.sh > /dev/null 2>&1
     chmod +x minecraft_version.sh > /dev/null 2>&1
 OUTER_EOF
 
