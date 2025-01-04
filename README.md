@@ -27,7 +27,7 @@
 > ```
 
 ### Starting your server
-You can start the server with **`./start.sh`** or start it with **`./autostart.sh`** in the **`bedrock-server`** directory.
+You can start the server with **`./start.sh`** or start it with **`./autostart.sh`** in the downloaded instance directory.
 
 ---
 
